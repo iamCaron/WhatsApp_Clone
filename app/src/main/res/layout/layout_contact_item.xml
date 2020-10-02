@@ -26,11 +26,12 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:text="Username"/>
+
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description..."/>
+            android:text="Hey there! I am using WhatsApp" />
     </LinearLayout>
 
 </LinearLayout>
