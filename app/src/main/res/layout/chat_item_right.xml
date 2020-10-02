@@ -61,29 +61,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="15dp"
-                    app:cardElevation="5dp">
+                   android:layout_margin="0dp"
+
+
+
+                    >
 
                         <ImageView
                             android:id="@+id/image_chat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/icon_male_ph" />
+                            android:src="@drawable/icon_male_ph"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="20dp"/>
+                        <TextView
+                            android:id="@+id/timestamp_image_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:textAlignment="viewEnd"
 
+                            android:textColor="@color/timestamp_left"
+                            android:textSize="10sp"
+                            android:layout_marginEnd="15dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:textStyle="italic"
+                            />
                 </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/timestamp_image_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:text="time"
-                    android:textColor="@color/timestamp_right"
-                    android:textSize="10sp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:textStyle="italic"/>
+
+
+
         </RelativeLayout>
 
 

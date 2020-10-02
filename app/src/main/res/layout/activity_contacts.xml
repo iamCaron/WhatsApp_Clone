@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
@@ -20,12 +19,14 @@
             android:layout_height="wrap_content"
             android:background="#37873A"
             android:orientation="horizontal">
+
             <ImageButton
+                android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_back_black_24dp"
                 android:background="@android:color/transparent"
-                android:tint="@android:color/white"/>
+                android:src="@drawable/ic_arrow_back_black_24dp"
+                android:tint="@android:color/white" />
 
             <TextView
                 android:layout_width="wrap_content"

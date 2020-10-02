@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +64,7 @@ public class ContactsActivity extends AppCompatActivity {
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
-
+        setButtonClick();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -201,4 +202,16 @@ public class ContactsActivity extends AppCompatActivity {
 
         }
     }
+
+    private void setButtonClick(){
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+    }
 }
+
+

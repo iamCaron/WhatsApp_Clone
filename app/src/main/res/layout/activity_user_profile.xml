@@ -38,10 +38,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"
-                android:background="@drawable/vignette" />
+                android:background="@drawable/vignette"
+                />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
+                app:title="dd"
+                android:theme="@style/ToolBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_collapseMode="pin"
