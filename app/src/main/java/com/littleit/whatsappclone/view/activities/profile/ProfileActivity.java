@@ -39,7 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import com.littleit.whatsappclone.R;
 import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.databinding.ActivityProfileBinding;
-import com.littleit.whatsappclone.view.activities.display.ViewImageActivity;
+import com.littleit.whatsappclone.view.activities.display.ViewProfileImageActivity;
 import com.littleit.whatsappclone.view.activities.starup.SplashScreenActivity;
 
 import java.util.HashMap;
@@ -100,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Drawable dr = binding.imageProfile.getDrawable();
                 Common.IMAGE_BITMAP = ((GlideBitmapDrawable)dr.getCurrent()).getBitmap();
                 ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(ProfileActivity.this, binding.imageProfile, "image");
-                Intent intent = new Intent(ProfileActivity.this, ViewImageActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, ViewProfileImageActivity.class);
                 startActivity(intent, activityOptionsCompat.toBundle());
 
 

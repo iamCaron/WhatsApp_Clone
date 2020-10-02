@@ -8,6 +8,7 @@ import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.littleit.whatsappclone.R;
 import com.littleit.whatsappclone.view.MainActivity;
 
@@ -19,6 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser!=null){
             new Handler().postDelayed(new Runnable() {
@@ -27,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1500);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -35,7 +37,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(new Intent(SplashScreenActivity.this, WelcomeScreenActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1500);
         }
 
     }

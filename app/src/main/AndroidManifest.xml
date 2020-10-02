@@ -22,6 +22,7 @@
         <activity android:name=".view.activities.profile.UserProfileActivity" />
         <activity android:name=".view.activities.chats.ChatsActivity" />
         <activity android:name=".view.activities.contact.ContactsActivity" />
+        <activity android:name=".view.activities.display.ViewProfileImageActivity" />
         <activity android:name=".view.activities.display.ViewImageActivity" />
         <activity android:name=".view.activities.profile.ProfileActivity" />
         <activity

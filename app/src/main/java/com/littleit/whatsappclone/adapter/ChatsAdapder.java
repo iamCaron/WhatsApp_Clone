@@ -1,6 +1,8 @@
 package com.littleit.whatsappclone.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.littleit.whatsappclone.R;
+import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.model.chat.Chats;
 import com.littleit.whatsappclone.tools.AudioService;
+import com.littleit.whatsappclone.view.activities.display.ViewImageActivity;
+import com.littleit.whatsappclone.view.activities.display.ViewProfileImageActivity;
 
 import java.util.List;
 
@@ -55,8 +61,21 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.bind(list.get(position));
+        holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //to open the image in viewImage activity
+                holder.imageMessage.invalidate();
+                Drawable dr = holder.imageMessage.getDrawable();
+                Common.IMAGE_BITMAP = ((GlideBitmapDrawable)dr.getCurrent()).getBitmap();
+                Intent intent = new Intent(context, ViewImageActivity.class);
+                intent.putExtra("sender",list.get(position).getSender());
+                context.startActivity(intent);
+
+            }
+        });
     }
 
     @Override
