@@ -5,4 +5,6 @@
     <color name="colorAccent">#049A8B</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="timestamp_left">#808080</color>
+    <color name="timestamp_right">#f1f1f1</color>
 </resources>

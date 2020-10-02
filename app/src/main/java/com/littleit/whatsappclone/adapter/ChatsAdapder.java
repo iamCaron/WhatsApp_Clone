@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -65,10 +66,13 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textMessage;
-        private LinearLayout layoutText, layoutImage, layoutVoice;
+        private TextView timestampTextView,timestampImageView;
+        private LinearLayout layoutText, layoutVoice;
+        private RelativeLayout  layoutImage;
         private ImageView imageMessage;
         private ImageButton btnPlay;
         private ViewHolder tmpHolder;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -78,6 +82,8 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
             imageMessage = itemView.findViewById(R.id.image_chat);
             layoutVoice = itemView.findViewById(R.id.layout_voice);
             btnPlay = itemView.findViewById(R.id.btn_play_chat);
+            timestampImageView=itemView.findViewById(R.id.timestamp_image_view);
+            timestampTextView=itemView.findViewById(R.id.timestamp_text);
         }
         void bind(final Chats chats){
             //Check chat type..
@@ -89,13 +95,13 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
                     layoutVoice.setVisibility(View.GONE);
 
                     textMessage.setText(chats.getTextMessage());
-
+                    timestampTextView.setText(chats.getDateTime());
                     break;
                 case "IMAGE" :
                     layoutText.setVisibility(View.GONE);
                     layoutImage.setVisibility(View.VISIBLE);
                     layoutVoice.setVisibility(View.GONE);
-
+                    timestampImageView.setText(chats.getDateTime());
                     Glide.with(context).load(chats.getUrl()).into(imageMessage);
                     break;
                 case "VOICE" :
