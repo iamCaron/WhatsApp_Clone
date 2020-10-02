@@ -71,7 +71,7 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
                 Drawable dr = holder.imageMessage.getDrawable();
                 Common.IMAGE_BITMAP = ((GlideBitmapDrawable)dr.getCurrent()).getBitmap();
                 Intent intent = new Intent(context, ViewImageActivity.class);
-                intent.putExtra("sender",list.get(position).getSender());
+                intent.putExtra("senderId",list.get(position).getSender());
                 context.startActivity(intent);
 
             }
