@@ -2,8 +2,11 @@ package com.littleit.whatsappclone.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.provider.Contacts;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
@@ -20,12 +24,15 @@ import com.littleit.whatsappclone.R;
 import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.model.chat.Chats;
 import com.littleit.whatsappclone.tools.AudioService;
+import com.littleit.whatsappclone.view.activities.chats.ChatsActivity;
 import com.littleit.whatsappclone.view.activities.display.ViewImageActivity;
-import com.littleit.whatsappclone.view.activities.display.ViewProfileImageActivity;
 
+
+import java.util.HashSet;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> {
@@ -36,8 +43,12 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
     private FirebaseUser firebaseUser;
     private ImageButton tmpBtnPlay;
     private AudioService audioService;
+    private ChatsActivity chatsActivity;
 
-    public ChatsAdapder(List<Chats> list, Context context) {
+
+
+    public ChatsAdapder(List<Chats> list, Context context,ChatsActivity activity) {
+        chatsActivity=activity;
         this.list = list;
         this.context = context;
         this.audioService = new AudioService(context);
@@ -76,6 +87,34 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
 
             }
         });
+        holder.imageMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+               updateHashSet(holder,position);
+                return true;
+            }
+        });
+        holder.textMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+               updateHashSet(holder, position);
+                return true;
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+               updateHashSet(holder, position);
+                return true;
+            }
+        });
+
+        if(Common.deleteMessageSet.contains(list.get(position).getId())){
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.selected_item));
+        }
     }
 
     @Override
@@ -162,5 +201,26 @@ public class ChatsAdapder extends RecyclerView.Adapter<ChatsAdapder.ViewHolder> 
         {
             return MSG_TYPE_LEFT;
         }
+    }
+
+    private void updateHashSet( final ViewHolder holder, final int position){
+
+
+        if(Common.deleteMessageSet==null){
+            Common.deleteMessageSet=new HashSet<String>();
+        }
+        if(Common.deleteMessageSet.contains(list.get(position).getId())){
+           Common.deleteMessageSet.remove(list.get(position).getId());
+            holder.itemView.setBackgroundColor(View.INVISIBLE);
+
+            chatsActivity.updateMenu();
+
+        }else {
+           Common.deleteMessageSet.add(list.get(position).getId());
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.selected_item));
+         chatsActivity.updateMenu();
+        }
+
+
     }
 }

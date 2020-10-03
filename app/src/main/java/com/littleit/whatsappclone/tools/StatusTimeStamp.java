@@ -21,9 +21,9 @@ public class StatusTimeStamp {
             String userID = firebaseUser.getUid();
         }
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
         String formattedDate = df.format(c.getTime());
 
         Map<String, Object> map = new HashMap<>();

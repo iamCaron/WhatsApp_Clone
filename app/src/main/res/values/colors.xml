@@ -7,4 +7,5 @@
     <color name="white">#FFFFFF</color>
     <color name="timestamp_left">#808080</color>
     <color name="timestamp_right">#f1f1f1</color>
+    <color name="selected_item"> #87ceeb</color>
 </resources>

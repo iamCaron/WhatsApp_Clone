@@ -3,9 +3,14 @@ package com.littleit.whatsappclone.view.activities.chats;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.view.menu.MenuItemImpl;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,15 +31,16 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.devlomi.record_view.OnBasketAnimationEnd;
-import com.devlomi.record_view.OnRecordClickListener;
 import com.devlomi.record_view.OnRecordListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,29 +48,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.littleit.whatsappclone.R;
 import com.littleit.whatsappclone.adapter.ChatsAdapder;
+import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.databinding.ActivityChatsBinding;
 import com.littleit.whatsappclone.interfaces.OnReadChatCallBack;
 import com.littleit.whatsappclone.managers.ChatService;
 import com.littleit.whatsappclone.model.chat.Chats;
 import com.littleit.whatsappclone.service.FirebaseService;
 import com.littleit.whatsappclone.tools.StatusTimeStamp;
+import com.littleit.whatsappclone.view.activities.dialog.DeleteConfirmationDailog;
 import com.littleit.whatsappclone.view.activities.dialog.DialogReviewSendImage;
 import com.littleit.whatsappclone.view.activities.profile.UserProfileActivity;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -72,6 +73,7 @@ public class ChatsActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatsActivity";
     private static final int REQUEST_CORD_PERMISSION = 332;
+
     private ActivityChatsBinding binding;
     private String receiverID;
     private ChatsAdapder adapder;
@@ -82,6 +84,8 @@ public class ChatsActivity extends AppCompatActivity {
     private int IMAGE_GALLERY_REQUEST = 111;
     private Uri imageUri;
 
+
+
     DatabaseReference dbReference;
     FirebaseUser currentUser;
 
@@ -89,6 +93,18 @@ public class ChatsActivity extends AppCompatActivity {
     private MediaRecorder mediaRecorder;
     private String audio_path;
     private String sTime;
+
+    public static  ActionMode getActionMode() {
+        return actionMode;
+    }
+
+    public void setActionMode(ActionMode actionMode) {
+        this.actionMode = actionMode;
+    }
+
+    public static ActionMode actionMode;
+    public static ActionMode.Callback mActionModeCallbacks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +116,11 @@ public class ChatsActivity extends AppCompatActivity {
 
         dbReference=FirebaseDatabase.getInstance().getReference();
         currentUser=FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if(savedInstanceState!=null){
+            Common.deleteMessageSet=new HashSet<>(savedInstanceState.getStringArrayList("chatlist"));
+        }
 
         initialize();
         initBtnClick();
@@ -119,7 +140,29 @@ public class ChatsActivity extends AppCompatActivity {
         StatusTimeStamp.setUserStatus("Offline");
     }
 
+    @Override
+    protected void onDestroy() {
+        Common.deleteMessageSet.clear();
+        super.onDestroy();
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        if (Common.deleteMessageSet != null) {
+            ArrayList<String> deleteMessageArrayList = new ArrayList<>();
+           for (String s:Common.deleteMessageSet){
+               deleteMessageArrayList.add(s);
+           }
+            savedInstanceState.putStringArrayList("chatlist", deleteMessageArrayList);
+        }
+    }
+
     private void initialize(){
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
@@ -274,7 +317,7 @@ public class ChatsActivity extends AppCompatActivity {
             @Override
             public void onReadSuccess(List<Chats> list) {
                 //adapder.setList(list);
-                binding.recyclerView.setAdapter(new ChatsAdapder(list,ChatsActivity.this));
+                binding.recyclerView.setAdapter(new ChatsAdapder(list,ChatsActivity.this,ChatsActivity.this));
             }
 
             @Override
@@ -297,6 +340,7 @@ public class ChatsActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Common.deleteMessageSet.clear();
                 finish();
             }
         });
@@ -468,5 +512,64 @@ public class ChatsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_activity_menu, menu);
+
+
+        return true;
+    }
+
+    @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                DeleteConfirmationDailog dailog=new DeleteConfirmationDailog(chatService);
+                dailog.show(getSupportFragmentManager(),"Delete Messages");
+            return true;
+        }
+      return false;
+    }
+
+
+    private void setupActionMode(){
+         mActionModeCallbacks=new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
+            }
+        };
+
+    }
+
+    public void updateMenu(){
+        if(Common.deleteMessageSet.isEmpty()){
+
+            ActionMenuItemView item = (ActionMenuItemView) findViewById(R.id.delete);
+            item.setVisibility(View.GONE);
+        }else {
+            ActionMenuItemView item = (ActionMenuItemView) findViewById(R.id.delete);
+            item.setVisibility(View.VISIBLE);
+        }
+    }
+
 
 }

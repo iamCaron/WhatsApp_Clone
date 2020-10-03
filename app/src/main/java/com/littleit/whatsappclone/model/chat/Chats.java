@@ -8,16 +8,21 @@ public class Chats {
     private String sender;
     private String receiver;
 
+
+
+    private String id;
+
     public Chats() {
     }
 
-    public Chats(String dateTime, String textMessage, String url,String type, String sender, String receiver) {
+    public Chats(String dateTime, String textMessage, String url,String type, String sender, String receiver,String id) {
         this.dateTime = dateTime;
         this.textMessage = textMessage;
         this.url = url;
         this.type = type;
         this.sender = sender;
         this.receiver = receiver;
+        this.id=id;
     }
 
     public String getUrl() {
@@ -66,5 +71,12 @@ public class Chats {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

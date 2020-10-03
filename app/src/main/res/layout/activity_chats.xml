@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:background="#37873A"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="visible">
                 <ImageButton
                     android:id="@+id/btn_back"
                     android:layout_width="wrap_content"
@@ -39,7 +40,7 @@
                     app:civ_border_width="1dp"
                     />
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="50dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
@@ -53,6 +54,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="13sp"
                         android:text="Username"/>
+
                     <TextView
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"

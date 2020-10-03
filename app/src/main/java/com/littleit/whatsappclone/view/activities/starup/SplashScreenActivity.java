@@ -10,7 +10,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.littleit.whatsappclone.R;
+import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.view.MainActivity;
+
+import java.util.HashSet;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -22,6 +25,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        Common.deleteMessageSet=new HashSet<>();
+
         if (firebaseUser!=null){
             new Handler().postDelayed(new Runnable() {
                 @Override

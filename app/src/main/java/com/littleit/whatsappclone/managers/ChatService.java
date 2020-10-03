@@ -19,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.littleit.whatsappclone.adapter.ChatsAdapder;
+import com.littleit.whatsappclone.common.Common;
 import com.littleit.whatsappclone.interfaces.OnReadChatCallBack;
 import com.littleit.whatsappclone.model.chat.Chats;
 import com.littleit.whatsappclone.view.activities.chats.ChatsActivity;
@@ -68,16 +69,19 @@ public class ChatService {
 
     public void sendTextMsg(String text){
 
+        String key= reference.child("Chats").push().getKey();
+
         Chats chats = new Chats(
                 getCurrentDate(),
                 text,
                 "",
                 "TEXT",
                 firebaseUser.getUid(),
-                receiverID
+                receiverID,
+                key
         );
 
-        reference.child("Chats").push().setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child("Chats").child(key).setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Send", "onSuccess: ");
@@ -99,17 +103,18 @@ public class ChatService {
     }
 
     public void sendImage(String imageUrl){
-
+        String key= reference.child("Chats").push().getKey();
         Chats chats = new Chats(
                 getCurrentDate(),
                 "",
                 imageUrl,
                 "IMAGE",
                 firebaseUser.getUid(),
-                receiverID
+                receiverID,
+                key
         );
 
-        reference.child("Chats").push().setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child("Chats").child(key).setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Send", "onSuccess: ");
@@ -153,16 +158,18 @@ public class ChatService {
                 Uri downloadUrl = urlTask.getResult();
                 String voiceUrl = String.valueOf(downloadUrl);
 
+                String key= reference.child("Chats").push().getKey();
                 Chats chats = new Chats(
                         getCurrentDate(),
                         "",
-                        voiceUrl,
-                        "VOICE",
+                        "",
+                        "IMAGE",
                         firebaseUser.getUid(),
-                        receiverID
+                        receiverID,
+                        key
                 );
 
-                reference.child("Chats").push().setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
+                reference.child("Chats").child(key).setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Send", "onSuccess: ");
@@ -183,6 +190,13 @@ public class ChatService {
                 chatRef2.child("chatid").setValue(firebaseUser.getUid());
             }
         });
+    }
+
+    public  void deleteMessages(){
+
+        for(String s: Common.deleteMessageSet) {
+            reference.child("Chats").child(s).removeValue();
+        }
     }
 
 }
